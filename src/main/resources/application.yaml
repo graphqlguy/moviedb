@@ -1,0 +1,6 @@
+spring:
+  application:
+    name: moviedb
+  graphql:
+    graphiql:
+      enabled: true
