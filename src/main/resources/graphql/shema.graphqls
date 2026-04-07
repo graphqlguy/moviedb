@@ -1,12 +1,38 @@
 type Query {
-    hello: String
     movies: [Movie!]!
     movie(id: ID!): Movie
+}
+
+enum Genre {
+    ACTION
+    ANIMATION
+    COMEDY
+    CRIME
+    DOCUMENTARY
+    DRAMA
+    FANTASY
+    HORROR
+    MUSICAL
+    MYSTERY
+    ROMANCE
+    SCIFI
+    THRILLER
+    WAR
+    WESTERN
 }
 
 type Movie {
     id: ID!
     title: String!
     releaseYear: Int!
-    genre: String
+    genre: Genre
+    rating: Float
+    directors: [Person!]!
+}
+
+type Person {
+    id: ID!
+    name: String!
+    birthYear: Int
+    nationality: String
 }

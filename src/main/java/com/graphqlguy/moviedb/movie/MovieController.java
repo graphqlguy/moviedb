@@ -1,5 +1,8 @@
 package com.graphqlguy.moviedb.movie;
 
+import com.graphqlguy.moviedb.person.Person;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.graphql.data.method.annotation.Argument;
 import org.springframework.graphql.data.method.annotation.QueryMapping;
 import org.springframework.graphql.data.method.annotation.SchemaMapping;
@@ -7,31 +10,26 @@ import org.springframework.stereotype.Controller;
 
 import java.util.List;
 
+@Slf4j
 @Controller
+@RequiredArgsConstructor
 public class MovieController {
 
-    // Sample data - we'll use a database in later classes
-    private final List<Movie> movies = List.of(
-            new Movie(1L, "The Shawshank Redemption", 1994, "Drama"),
-            new Movie(2L, "The Godfather", 1972, "Crime"),
-            new Movie(3L, "The Dark Knight", 2008, "Action"),
-            new Movie(4L, "Pulp Fiction", 1994, "Crime"),
-            new Movie(5L, "Forrest Gump", 1994, "Drama")
-    );
-
-    @QueryMapping
-    String hello() {
-        return "Hello World!";
-    }
+    private final MovieRepository movieRepository;
 
     @QueryMapping
     List<Movie> movies() {
-        return movies;
+        return movieRepository.findAll();
     }
 
     @QueryMapping
     Movie movie(@Argument Long id) {
-        return movies.stream().filter(movie -> movie.getId().equals(id)).findFirst().orElse(null);
+        return movieRepository.findById(id).get();
     }
 
+    @SchemaMapping
+    List<Person> directors(Movie movie) {
+        log.info("Fetching Directors for movie {}", movie.getTitle());
+        return movie.getDirectors();
+    }
 }
