@@ -1,22 +1,23 @@
-# MovieDB - Schema Design & Relationships
+# MovieDB - Relationships & Nested Resolution
 
-This is the companion code for **Class 2: Schema Design & Relationships** from the [Spring GraphQL Tutorial](https://graphqlguy.com/docs/tutorial-SpringGraphQL/schema-design-fundamentals/) masterclass.
+This is the companion code for **Class 3: Relationships & Nested Resolution** from the [Spring GraphQL Tutorial](https://graphqlguy.com/docs/tutorial-SpringGraphQL/relationships-nested-resolution/) masterclass.
 
 ## What You'll Learn
 
-In this class you add JPA persistence, enums, and your first entity relationship. It covers:
+In this class you model a relationship that carries its own data and see how GraphQL resolves nested queries field by field. It covers:
 
-- GraphQL enums and how they map to Java enums
-- Setting up JPA with an in-memory H2 database
-- Modeling a many-to-many relationship (movies have directors)
-- Resolving related types with `@SchemaMapping`
-- Seeding initial data with a `CommandLineRunner`
+- Why some relationships need a junction entity instead of `@ManyToMany`
+- Building a `MovieCast` entity that links actors to movies with character names
+- How GraphQL resolves nested queries as a tree (root → children → grandchildren)
+- Adding search with Spring Data derived query methods (`findByTitleContainingIgnoreCase`)
+- Auto-resolution: when Spring GraphQL uses a getter and when you need `@SchemaMapping`
+- Null propagation: how a single non-null field error can bubble up an entire response
 
 ## Prerequisites
 
 - Java 25+
 - Maven 3.6+ (or use the included Maven wrapper)
-- Class 1 completed ([`class_1` branch](https://github.com/graphqlguy/moviedb/tree/class_1))
+- Class 2 completed ([`class_2` branch](https://github.com/graphqlguy/moviedb/tree/class_2))
 
 ## Running the Application
 
@@ -28,29 +29,34 @@ Once running, open [http://localhost:8080/graphiql](http://localhost:8080/graphi
 
 ## Example Queries
 
-**Get all movies with genre:**
+**Get a movie with its full cast and character names:**
 
 ```graphql
 query {
-  movies {
+  movie(id: 1) {
     title
-    genre
+    directors {
+      name
+    }
+    cast {
+      characterName
+      person {
+        name
+        nationality
+      }
+    }
   }
 }
 ```
 
-**Get a movie with its directors:**
+**Search movies by partial, case-insensitive title:**
 
 ```graphql
 query {
-  movie(id: 6) {
+  searchMovies(title: "god") {
     title
+    releaseYear
     genre
-    rating
-    directors {
-      name
-      nationality
-    }
   }
 }
 ```
@@ -74,4 +80,4 @@ Visit [http://localhost:8080/h2-console](http://localhost:8080/h2-console) to br
 
 ## Course
 
-This is part 2 of a 13-part masterclass. See the [full course](https://graphqlguy.com/docs/category/spring-graphql-tutorial) for all classes.
+This is part 3 of a 13-part masterclass. See the [full course](https://graphqlguy.com/docs/category/spring-graphql-tutorial) for all classes.
