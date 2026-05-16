@@ -2,15 +2,7 @@ package com.graphqlguy.moviedb.movie;
 
 import com.graphqlguy.moviedb.person.Person;
 import com.graphqlguy.moviedb.shared.Genre;
-import jakarta.persistence.Entity;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.JoinTable;
-import jakarta.persistence.ManyToMany;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -44,6 +36,10 @@ public class Movie {
             inverseJoinColumns = @JoinColumn(name = "director_id")
     )
     private List<Person> directors =  new ArrayList<>();
+
+    @Builder.Default
+    @OneToMany(mappedBy = "movie", fetch = FetchType.LAZY, cascade = CascadeType.ALL,  orphanRemoval = true)
+    private List<MovieCast> cast =  new ArrayList<>();
 
     @Override
     public boolean equals(final Object o) {

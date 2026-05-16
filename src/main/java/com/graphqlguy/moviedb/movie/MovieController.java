@@ -27,9 +27,20 @@ public class MovieController {
         return movieRepository.findById(id).get();
     }
 
+    @QueryMapping
+    List<Movie> searchMovies(@Argument String title) {
+        return movieRepository.findByTitleContainingIgnoreCase(title);
+    }
+
     @SchemaMapping
     List<Person> directors(Movie movie) {
         log.info("Fetching Directors for movie {}", movie.getTitle());
         return movie.getDirectors();
     }
+
+    @SchemaMapping
+    List<MovieCast> cast(Movie movie) {
+        return movie.getCast();
+    }
+
 }

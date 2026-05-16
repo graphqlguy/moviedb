@@ -1,6 +1,7 @@
 type Query {
     movies: [Movie!]!
     movie(id: ID!): Movie
+    searchMovies(title: String!): [Movie]
 }
 
 enum Genre {
@@ -28,6 +29,7 @@ type Movie {
     genre: Genre
     rating: Float
     directors: [Person!]!
+    cast: [MovieCast!]!
 }
 
 type Person {
@@ -35,4 +37,10 @@ type Person {
     name: String!
     birthYear: Int
     nationality: String
+}
+
+type MovieCast {
+    id: ID!
+    characterName: String!
+    person: Person!
 }
