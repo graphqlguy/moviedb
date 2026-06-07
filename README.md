@@ -1,6 +1,6 @@
 # MovieDB - Mutations & Input Validation
 
-This is the companion code for **Class 4: Mutations & Input Validation** from the [Spring GraphQL Tutorial](https://graphqlguy.com/docs/tutorial-SpringGraphQL/mutations-input-validation/) masterclass.
+This is the companion code for **Class 4: Mutations & Input Validation** from the [Spring GraphQL Tutorial](https://graphqlguy.com/docs/tutorial-SpringGraphQL/mutations/) masterclass.
 
 ## What You'll Learn
 
