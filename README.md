@@ -1,23 +1,25 @@
-# MovieDB - Relationships & Nested Resolution
+# MovieDB - Mutations & Input Validation
 
-This is the companion code for **Class 3: Relationships & Nested Resolution** from the [Spring GraphQL Tutorial](https://graphqlguy.com/docs/tutorial-SpringGraphQL/relationships-nested-resolution/) masterclass.
+This is the companion code for **Class 4: Mutations & Input Validation** from the [Spring GraphQL Tutorial](https://graphqlguy.com/docs/tutorial-SpringGraphQL/mutations-input-validation/) masterclass.
 
 ## What You'll Learn
 
-In this class you model a relationship that carries its own data and see how GraphQL resolves nested queries field by field. It covers:
+In this class you move from reading data to changing it, and learn how to keep bad input out. It covers:
 
-- Why some relationships need a junction entity instead of `@ManyToMany`
-- Building a `MovieCast` entity that links actors to movies with character names
-- How GraphQL resolves nested queries as a tree (root → children → grandchildren)
-- Adding search with Spring Data derived query methods (`findByTitleContainingIgnoreCase`)
-- Auto-resolution: when Spring GraphQL uses a getter and when you need `@SchemaMapping`
-- Null propagation: how a single non-null field error can bubble up an entire response
+- Defining a `type Mutation` and wiring resolvers with `@MutationMapping`
+- Modeling write operations with `input` types (`CreatePersonInput`, `UpdatePersonInput`)
+- Declarative validation with Jakarta Bean Validation (`@NotBlank`, `@Size`, `@Min`) plus `@Valid`
+- Partial updates with Spring GraphQL's `ArgumentValue<T>` — telling an *omitted* field apart from an explicit `null`
+- A reusable `applyIfPresent` helper that updates only the fields the client actually sent
+- Returning structured response payloads (`DeletePersonResponse`) instead of bare scalars
+- Signalling bad input with a custom `InvalidInputException` that carries the offending field
+- Extracting a service layer (`MovieService` / `PersonService`) to keep controllers thin
 
 ## Prerequisites
 
 - Java 25+
 - Maven 3.6+ (or use the included Maven wrapper)
-- Class 2 completed ([`class_2` branch](https://github.com/graphqlguy/moviedb/tree/class_2))
+- Class 3 completed ([`class_3` branch](https://github.com/graphqlguy/moviedb/tree/class_3))
 
 ## Running the Application
 
@@ -27,36 +29,55 @@ In this class you model a relationship that carries its own data and see how Gra
 
 Once running, open [http://localhost:8080/graphiql](http://localhost:8080/graphiql) to access the GraphiQL IDE.
 
-## Example Queries
+## Example Mutations
 
-**Get a movie with its full cast and character names:**
+**Create a person (validated input):**
 
 ```graphql
-query {
-  movie(id: 1) {
-    title
-    directors {
-      name
-    }
-    cast {
-      characterName
-      person {
-        name
-        nationality
-      }
-    }
+mutation {
+  createPerson(input: { name: "Greta Gerwig", birthYear: 1983, nationality: "American" }) {
+    id
+    name
+    birthYear
+    nationality
   }
 }
 ```
 
-**Search movies by partial, case-insensitive title:**
+**Partially update a person — only the fields you send are changed:**
+
+```graphql
+mutation {
+  updatePerson(input: { id: 1, nationality: "British" }) {
+    id
+    name
+    nationality
+  }
+}
+```
+
+**Delete a person (structured response payload):**
+
+```graphql
+mutation {
+  deletePerson(id: 1) {
+    success
+    message
+    deletedId
+  }
+}
+```
+
+## Example Query
+
+**List all people:**
 
 ```graphql
 query {
-  searchMovies(title: "god") {
-    title
-    releaseYear
-    genre
+  people {
+    id
+    name
+    nationality
   }
 }
 ```
@@ -80,4 +101,4 @@ Visit [http://localhost:8080/h2-console](http://localhost:8080/h2-console) to br
 
 ## Course
 
-This is part 3 of a 13-part masterclass. See the [full course](https://graphqlguy.com/docs/category/spring-graphql-tutorial) for all classes.
+This is part 4 of a 13-part masterclass. See the [full course](https://graphqlguy.com/docs/category/spring-graphql-tutorial) for all classes.

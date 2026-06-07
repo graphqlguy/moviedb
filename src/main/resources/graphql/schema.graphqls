@@ -2,6 +2,7 @@ type Query {
     movies: [Movie!]!
     movie(id: ID!): Movie
     searchMovies(title: String!): [Movie]
+    people: [Person!]!
 }
 
 enum Genre {
@@ -43,4 +44,36 @@ type MovieCast {
     id: ID!
     characterName: String!
     person: Person!
+}
+
+type Mutation {
+    deleteMovie(id: ID!): DeleteMovieResponse!
+    createPerson(input: CreatePersonInput!): Person!
+    updatePerson(input: UpdatePersonInput!): Person!
+    deletePerson(id: ID!): DeletePersonResponse!
+}
+
+input UpdatePersonInput {
+    id: ID!
+    name: String
+    birthYear: Int
+    nationality: String
+}
+
+input CreatePersonInput {
+    name: String!
+    birthYear: Int
+    nationality: String
+}
+
+type DeleteMovieResponse {
+    success: Boolean!
+    message: String!
+    deletedId: String
+}
+
+type DeletePersonResponse {
+    success: Boolean!
+    message: String!
+    deletedId: String
 }
