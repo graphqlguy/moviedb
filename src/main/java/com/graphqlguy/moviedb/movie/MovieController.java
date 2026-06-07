@@ -4,6 +4,7 @@ import com.graphqlguy.moviedb.person.Person;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.graphql.data.method.annotation.Argument;
+import org.springframework.graphql.data.method.annotation.MutationMapping;
 import org.springframework.graphql.data.method.annotation.QueryMapping;
 import org.springframework.graphql.data.method.annotation.SchemaMapping;
 import org.springframework.stereotype.Controller;
@@ -15,21 +16,26 @@ import java.util.List;
 @RequiredArgsConstructor
 public class MovieController {
 
-    private final MovieRepository movieRepository;
+    private final MovieService movieService;
 
     @QueryMapping
     List<Movie> movies() {
-        return movieRepository.findAll();
+        return movieService.findAll();
     }
 
     @QueryMapping
     Movie movie(@Argument Long id) {
-        return movieRepository.findById(id).get();
+        return movieService.findById(id);
     }
 
     @QueryMapping
     List<Movie> searchMovies(@Argument String title) {
-        return movieRepository.findByTitleContainingIgnoreCase(title);
+        return movieService.findByTitleContainingIgnoreCase(title);
+    }
+
+    @MutationMapping
+    DeleteMovieResponse deleteMovie(@Argument Long id) {
+        return movieService.deleteMovie(id);
     }
 
     @SchemaMapping
