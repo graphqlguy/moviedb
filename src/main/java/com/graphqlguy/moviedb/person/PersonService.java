@@ -1,6 +1,7 @@
 package com.graphqlguy.moviedb.person;
 
-import com.graphqlguy.moviedb.InvalidInputException;
+import com.graphqlguy.moviedb.exception.EntityNotFoundException;
+import com.graphqlguy.moviedb.exception.InvalidInputException;
 import com.graphqlguy.moviedb.movie.MovieCastRepository;
 import com.graphqlguy.moviedb.movie.MovieRepository;
 import lombok.RequiredArgsConstructor;
@@ -45,7 +46,7 @@ public class PersonService {
 
         final Optional<Person> personOptional = personRepository.findById(input.id());
         if (personOptional.isEmpty()) {
-            throw new RuntimeException("Person could not be found");
+            throw new EntityNotFoundException("Person",  input.id());
         }
 
         final Person person = personOptional.get();
@@ -66,16 +67,16 @@ public class PersonService {
         log.debug("Deleting person {}", id);
         final Optional<Person> personOptional = personRepository.findById(id);
         if (personOptional.isEmpty()) {
-            return new DeletePersonResponse(false, "Person with an id = " + id + " doesn't exist", null);
+            throw new EntityNotFoundException("Person", id);
         }
 
         final Person person = personOptional.get();
         if (movieCastRepository.existsByPerson(person) || movieRepository.existsByDirectorsContaining(person)) {
-            return new DeletePersonResponse(false, "Person is linked to a movie", null);
+            return new DeletePersonResponse(false, DeletePersonError.LINKED_TO_MOVIE, null);
         }
 
         personRepository.delete(person);
-        return new DeletePersonResponse(true, "Person deleted successfully", id);
+        return new DeletePersonResponse(true, null, id);
 
 
     }

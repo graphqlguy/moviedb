@@ -1,15 +1,21 @@
 package com.graphqlguy.moviedb.movie;
 
 import com.graphqlguy.moviedb.person.Person;
+import graphql.GraphqlErrorBuilder;
+import graphql.execution.DataFetcherResult;
+import graphql.schema.DataFetchingEnvironment;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.graphql.data.method.annotation.Argument;
 import org.springframework.graphql.data.method.annotation.MutationMapping;
 import org.springframework.graphql.data.method.annotation.QueryMapping;
 import org.springframework.graphql.data.method.annotation.SchemaMapping;
+import org.springframework.graphql.execution.ErrorType;
 import org.springframework.stereotype.Controller;
 
 import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 @Slf4j
 @Controller
@@ -42,6 +48,23 @@ public class MovieController {
     List<Person> directors(Movie movie) {
         log.info("Fetching Directors for movie {}", movie.getTitle());
         return movie.getDirectors();
+    }
+
+    @QueryMapping
+    public DataFetcherResult<List<Movie>> moviesByIds(@Argument List<Long> ids,
+                                                      DataFetchingEnvironment env) {
+        List<Movie> found = movieService.findByIds(ids);
+        Set<Long> foundIds = found.stream().map(Movie::getId).collect(Collectors.toSet());
+        List<Long> missing = ids.stream().filter(id -> !foundIds.contains(id)).toList();
+
+        var result = DataFetcherResult.<List<Movie>>newResult().data(found);
+        if (!missing.isEmpty()) {
+            result.error(GraphqlErrorBuilder.newError(env)
+                    .message("Movies not found: " + missing)
+                    .errorType(ErrorType.NOT_FOUND)
+                    .build());
+        }
+        return result.build();
     }
 
     @SchemaMapping
