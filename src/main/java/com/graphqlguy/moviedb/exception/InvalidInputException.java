@@ -1,4 +1,4 @@
-package com.graphqlguy.moviedb;
+package com.graphqlguy.moviedb.exception;
 
 import lombok.Getter;
 

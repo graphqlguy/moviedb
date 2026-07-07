@@ -3,6 +3,7 @@ type Query {
     movie(id: ID!): Movie
     searchMovies(title: String!): [Movie]
     people: [Person!]!
+    moviesByIds(ids: [ID!]!): [Movie]
 }
 
 enum Genre {
@@ -74,6 +75,10 @@ type DeleteMovieResponse {
 
 type DeletePersonResponse {
     success: Boolean!
-    message: String!
+    error: DeletePersonError
     deletedId: String
+}
+
+enum DeletePersonError {
+    LINKED_TO_MOVIE
 }

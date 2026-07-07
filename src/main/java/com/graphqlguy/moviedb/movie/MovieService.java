@@ -1,5 +1,6 @@
 package com.graphqlguy.moviedb.movie;
 
+import com.graphqlguy.moviedb.exception.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -19,7 +20,7 @@ public class MovieService {
     }
 
     Movie findById(final Long id) {
-        return movieRepository.findById(id).orElse(null);
+        return movieRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("Movie", id));
     }
 
     List<Movie> findByTitleContainingIgnoreCase(final String title) {
@@ -35,4 +36,9 @@ public class MovieService {
         movieRepository.deleteById(id);
         return new DeleteMovieResponse(true, "Movie deleted successfully", id);
     }
+
+    List<Movie> findByIds(final List<Long> ids) {
+        return movieRepository.findAllById(ids);
+    }
+
 }
