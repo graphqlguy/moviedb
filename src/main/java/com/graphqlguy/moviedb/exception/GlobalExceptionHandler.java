@@ -6,6 +6,7 @@ import graphql.schema.DataFetchingEnvironment;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.graphql.data.method.annotation.GraphQlExceptionHandler;
 import org.springframework.graphql.execution.ErrorType;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 
 import java.util.Map;
@@ -30,6 +31,14 @@ public class GlobalExceptionHandler {
                 .message(iie.getMessage())
                 .errorType(ErrorType.BAD_REQUEST)
                 .extensions(Map.of("field", iie.getField()))
+                .build();
+    }
+
+    @GraphQlExceptionHandler
+    public GraphQLError handleAccessDenied(AccessDeniedException ex, DataFetchingEnvironment env) {
+        return GraphqlErrorBuilder.newError(env)
+                .message("You are not authorized to perform this action")
+                .errorType(ErrorType.FORBIDDEN)
                 .build();
     }
 

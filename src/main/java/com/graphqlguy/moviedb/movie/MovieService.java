@@ -3,6 +3,7 @@ package com.graphqlguy.moviedb.movie;
 import com.graphqlguy.moviedb.exception.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -27,6 +28,7 @@ public class MovieService {
         return movieRepository.findByTitleContainingIgnoreCase(title);
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     DeleteMovieResponse deleteMovie(final Long id) {
         log.info("Delete movie with id {}", id);
         if (!movieRepository.existsById(id)) {

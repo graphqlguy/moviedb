@@ -8,6 +8,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.graphql.data.ArgumentValue;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -28,6 +29,7 @@ public class PersonService {
         return personRepository.findAll();
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     Person createPerson(final CreatePersonInput input) {
         log.debug("Creating person {}", input);
         return personRepository.save(Person.builder()
@@ -37,6 +39,7 @@ public class PersonService {
                 .build());
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     Person updatePerson(final UpdatePersonInput input) {
         log.debug("Updating person {}", input);
 
@@ -63,6 +66,7 @@ public class PersonService {
         }
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     DeletePersonResponse delete(final Long id) {
         log.debug("Deleting person {}", id);
         final Optional<Person> personOptional = personRepository.findById(id);
