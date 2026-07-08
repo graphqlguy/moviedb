@@ -7,8 +7,12 @@ import com.graphqlguy.moviedb.movie.MovieRepository;
 import com.graphqlguy.moviedb.person.Person;
 import com.graphqlguy.moviedb.person.PersonRepository;
 import com.graphqlguy.moviedb.shared.Genre;
+import com.graphqlguy.moviedb.user.AppUser;
+import com.graphqlguy.moviedb.user.Role;
+import com.graphqlguy.moviedb.user.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.boot.CommandLineRunner;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
@@ -19,10 +23,21 @@ public class DataInitializer implements CommandLineRunner {
 
     private final MovieRepository movieRepository;
     private final PersonRepository personRepository;
+    private final UserRepository userRepository;
+    private final PasswordEncoder passwordEncoder;
     private final MovieCastRepository movieCastRepository;
 
     @Override
     public void run(String... args) {
+
+        // At the top of run() method:
+        userRepository.save(AppUser.builder()
+                .username("admin").email("admin@moviedb.com")
+                .password(passwordEncoder.encode("admin123")).role(Role.ADMIN).build());
+        userRepository.save(AppUser.builder()
+                .username("user").email("user@moviedb.com")
+                .password(passwordEncoder.encode("user123")).role(Role.USER).build());
+
         // Directors
         Person frankDarabont      = createAndSavePerson("Frank Darabont", 1959, "Hungarian-American");
         Person francisFordCoppola = createAndSavePerson("Francis Ford Coppola", 1939, "American");

@@ -47,11 +47,34 @@ type MovieCast {
     person: Person!
 }
 
+type AuthResponse {
+    token: String!
+    user: User!
+}
+
+type User {
+    id: ID!
+    username: String!
+    email: String!
+    role: Role!
+}
+
+enum Role {
+    USER,
+    ADMIN
+}
+
 type Mutation {
     deleteMovie(id: ID!): DeleteMovieResponse!
     createPerson(input: CreatePersonInput!): Person!
     updatePerson(input: UpdatePersonInput!): Person!
     deletePerson(id: ID!): DeletePersonResponse!
+    login(input: LoginInput!): AuthResponse!
+}
+
+input LoginInput {
+    username: String!
+    password: String!
 }
 
 input UpdatePersonInput {
