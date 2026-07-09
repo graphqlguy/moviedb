@@ -32,6 +32,7 @@ type Movie {
     rating: Float
     directors: [Person!]!
     cast: [MovieCast!]!
+    reviews: [Review!]!
 }
 
 type Person {
@@ -55,7 +56,7 @@ type AuthResponse {
 type User {
     id: ID!
     username: String!
-    email: String!
+    email: String
     role: Role!
 }
 
@@ -64,12 +65,42 @@ enum Role {
     ADMIN
 }
 
+"""A user's review of a movie"""
+type Review {
+    id: ID!
+    """Rating from 1 to 10"""
+    score: Int!
+    comment: String
+    createdAt: String!
+    user: User!
+}
+
 type Mutation {
     deleteMovie(id: ID!): DeleteMovieResponse!
     createPerson(input: CreatePersonInput!): Person!
     updatePerson(input: UpdatePersonInput!): Person!
     deletePerson(id: ID!): DeletePersonResponse!
     login(input: LoginInput!): AuthResponse!
+
+    """Submit a review for a movie (one per user per movie)"""
+    createMovieReview(input: CreateMovieReviewInput!): Review!
+    """Delete a review (owner or admin only)"""
+    deleteReview(id: ID!): DeleteReviewResponse!
+}
+
+"""Input for creating a movie review"""
+input CreateMovieReviewInput {
+    movieId: ID!
+    """Rating from 1 to 10"""
+    score: Int!
+    comment: String
+}
+
+"""Result of deleting a review."""
+type DeleteReviewResponse {
+    success: Boolean!
+    """ID of the deleted review, or null if nothing was deleted."""
+    deletedId: ID
 }
 
 input LoginInput {
