@@ -2,6 +2,8 @@ package com.graphqlguy.moviedb.person;
 
 import com.graphqlguy.moviedb.exception.EntityNotFoundException;
 import com.graphqlguy.moviedb.exception.InvalidInputException;
+import com.graphqlguy.moviedb.movie.Movie;
+import com.graphqlguy.moviedb.movie.MovieCast;
 import com.graphqlguy.moviedb.movie.MovieCastRepository;
 import com.graphqlguy.moviedb.movie.MovieRepository;
 import lombok.RequiredArgsConstructor;
@@ -10,14 +12,18 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.graphql.data.ArgumentValue;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.function.Consumer;
+import java.util.stream.Collectors;
 
 @Slf4j
 @Service
 @RequiredArgsConstructor
+@Transactional(readOnly = true)
 public class PersonService {
 
     private final PersonRepository personRepository;
@@ -29,6 +35,7 @@ public class PersonService {
         return personRepository.findAll();
     }
 
+    @Transactional
     @PreAuthorize("hasRole('ADMIN')")
     Person createPerson(final CreatePersonInput input) {
         log.debug("Creating person {}", input);
@@ -39,6 +46,7 @@ public class PersonService {
                 .build());
     }
 
+    @Transactional
     @PreAuthorize("hasRole('ADMIN')")
     Person updatePerson(final UpdatePersonInput input) {
         log.debug("Updating person {}", input);
@@ -66,6 +74,7 @@ public class PersonService {
         }
     }
 
+    @Transactional
     @PreAuthorize("hasRole('ADMIN')")
     DeletePersonResponse delete(final Long id) {
         log.debug("Deleting person {}", id);
@@ -84,4 +93,15 @@ public class PersonService {
 
 
     }
+
+    public Map<Long, List<Person>> findDirectorsByMovieIds(final List<Long> movieIds) {
+        return movieRepository.findAllWithDirectorsByIdIn(movieIds).stream()
+                .collect(Collectors.toMap(Movie::getId, Movie::getDirectors));
+    }
+
+    public Map<Long, List<MovieCast>> findCastByMovieIds(final List<Long> movieIds) {
+        return movieCastRepository.findWithPersonByMovieIdIn(movieIds).stream()
+                .collect(Collectors.groupingBy(movieCast -> movieCast.getMovie().getId()));
+    }
+
 }

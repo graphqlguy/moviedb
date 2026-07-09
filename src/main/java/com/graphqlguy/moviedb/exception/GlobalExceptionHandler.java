@@ -43,6 +43,14 @@ public class GlobalExceptionHandler {
     }
 
     @GraphQlExceptionHandler
+    public GraphQLError handleDuplicateReview(DuplicateReviewException ex, DataFetchingEnvironment env) {
+        return GraphqlErrorBuilder.newError(env)
+                .message(ex.getMessage())
+                .errorType(ErrorType.BAD_REQUEST)
+                .build();
+    }
+
+    @GraphQlExceptionHandler
     public GraphQLError handleUnhandled(final Exception e, DataFetchingEnvironment environment) {
 
         String reference = UUID.randomUUID().toString();

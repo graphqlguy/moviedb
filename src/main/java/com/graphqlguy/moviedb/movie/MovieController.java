@@ -1,6 +1,5 @@
 package com.graphqlguy.moviedb.movie;
 
-import com.graphqlguy.moviedb.person.Person;
 import graphql.GraphqlErrorBuilder;
 import graphql.execution.DataFetcherResult;
 import graphql.schema.DataFetchingEnvironment;
@@ -9,7 +8,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.graphql.data.method.annotation.Argument;
 import org.springframework.graphql.data.method.annotation.MutationMapping;
 import org.springframework.graphql.data.method.annotation.QueryMapping;
-import org.springframework.graphql.data.method.annotation.SchemaMapping;
 import org.springframework.graphql.execution.ErrorType;
 import org.springframework.stereotype.Controller;
 
@@ -44,11 +42,6 @@ public class MovieController {
         return movieService.deleteMovie(id);
     }
 
-    @SchemaMapping
-    List<Person> directors(Movie movie) {
-        log.info("Fetching Directors for movie {}", movie.getTitle());
-        return movie.getDirectors();
-    }
 
     @QueryMapping
     public DataFetcherResult<List<Movie>> moviesByIds(@Argument List<Long> ids,
@@ -66,10 +59,4 @@ public class MovieController {
         }
         return result.build();
     }
-
-    @SchemaMapping
-    List<MovieCast> cast(Movie movie) {
-        return movie.getCast();
-    }
-
 }
