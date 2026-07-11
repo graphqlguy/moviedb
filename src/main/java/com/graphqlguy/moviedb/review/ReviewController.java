@@ -1,11 +1,13 @@
 package com.graphqlguy.moviedb.review;
 
 import com.graphqlguy.moviedb.movie.Movie;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.graphql.data.method.annotation.Argument;
 import org.springframework.graphql.data.method.annotation.BatchMapping;
 import org.springframework.graphql.data.method.annotation.MutationMapping;
 import org.springframework.stereotype.Controller;
+import org.springframework.validation.annotation.Validated;
 
 import java.security.Principal;
 import java.util.List;
@@ -13,6 +15,7 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 @Controller
+@Validated
 @RequiredArgsConstructor
 public class ReviewController {
 
@@ -30,7 +33,7 @@ public class ReviewController {
     }
 
     @MutationMapping
-    Review createMovieReview(@Argument CreateMovieReviewInput input, Principal principal) {
+    Review createMovieReview(@Argument @Valid CreateMovieReviewInput input, Principal principal) {
         return reviewService.createMovieReview(input, principal.getName());
     }
 

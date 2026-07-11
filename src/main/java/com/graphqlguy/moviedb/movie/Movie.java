@@ -30,6 +30,7 @@ public class Movie {
     private Integer runtime;
     private String plot;
     private String posterUrl;
+    private Integer tmdbId;
 
     @Builder.Default
     @ManyToMany

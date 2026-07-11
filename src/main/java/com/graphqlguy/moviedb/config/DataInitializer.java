@@ -66,51 +66,51 @@ public class DataInitializer implements CommandLineRunner {
         Person robertDeNiro         = createAndSavePerson("Robert De Niro", 1943, "American");
 
         // Movies with cast
-        Movie shawshank = createAndSaveMovie("The Shawshank Redemption", 1994, Genre.DRAMA, 9.3, List.of(frankDarabont));
+        Movie shawshank = createAndSaveMovie("The Shawshank Redemption", 1994, Genre.DRAMA, 9.3, 278, List.of(frankDarabont));
         createAndSaveCastEntry(shawshank, timRobbins, "Andy Dufresne");
         createAndSaveCastEntry(shawshank, morganFreeman, "Red");
 
-        Movie godfather = createAndSaveMovie("The Godfather", 1972, Genre.CRIME, 9.2, List.of(francisFordCoppola));
+        Movie godfather = createAndSaveMovie("The Godfather", 1972, Genre.CRIME, 9.2, 238, List.of(francisFordCoppola));
         createAndSaveCastEntry(godfather, marlonBrando, "Don Vito Corleone");
         createAndSaveCastEntry(godfather, alPacino, "Michael Corleone");
 
-        Movie godfather2 = createAndSaveMovie("The Godfather Part II", 1974, Genre.CRIME, 9.0, List.of(francisFordCoppola));
+        Movie godfather2 = createAndSaveMovie("The Godfather Part II", 1974, Genre.CRIME, 9.0, 240, List.of(francisFordCoppola));
         createAndSaveCastEntry(godfather2, alPacino, "Michael Corleone");
         createAndSaveCastEntry(godfather2, robertDeNiro, "Young Vito Corleone");
 
-        Movie forrest = createAndSaveMovie("Forrest Gump", 1994, Genre.DRAMA, 8.8, List.of(robertZemeckis));
+        Movie forrest = createAndSaveMovie("Forrest Gump", 1994, Genre.DRAMA, 8.8, 13, List.of(robertZemeckis));
         createAndSaveCastEntry(forrest, tomHanks, "Forrest Gump");
 
-        Movie angryMen = createAndSaveMovie("12 Angry Men", 1957, Genre.DRAMA, 9.0, List.of(sidneyLumet));
+        Movie angryMen = createAndSaveMovie("12 Angry Men", 1957, Genre.DRAMA, 9.0, 389, List.of(sidneyLumet));
         createAndSaveCastEntry(angryMen, henryFonda, "Juror 8");
 
-        Movie inception = createAndSaveMovie("Inception", 2010, Genre.SCIFI, 8.8, List.of(christopherNolan));
+        Movie inception = createAndSaveMovie("Inception", 2010, Genre.SCIFI, 8.8, 27205, List.of(christopherNolan));
         createAndSaveCastEntry(inception, leonardoDiCaprio, "Dom Cobb");
 
-        Movie interstellar = createAndSaveMovie("Interstellar", 2014, Genre.SCIFI, 8.6, List.of(christopherNolan));
+        Movie interstellar = createAndSaveMovie("Interstellar", 2014, Genre.SCIFI, 8.6, 157336, List.of(christopherNolan));
         createAndSaveCastEntry(interstellar, leonardoDiCaprio, "Cooper");
 
-        Movie darkKnight = createAndSaveMovie("The Dark Knight", 2008, Genre.ACTION, 9.0, List.of(christopherNolan));
+        Movie darkKnight = createAndSaveMovie("The Dark Knight", 2008, Genre.ACTION, 9.0, 155, List.of(christopherNolan));
         createAndSaveCastEntry(darkKnight, leonardoDiCaprio, "Bruce Wayne");
 
-        Movie goodfellas = createAndSaveMovie("Goodfellas", 1990, Genre.CRIME, 8.7, List.of(martinScorsese));
+        Movie goodfellas = createAndSaveMovie("Goodfellas", 1990, Genre.CRIME, 8.7, 769, List.of(martinScorsese));
         createAndSaveCastEntry(goodfellas, rayLiotta, "Henry Hill");
         createAndSaveCastEntry(goodfellas, robertDeNiro, "James Conway");
 
-        Movie se7en = createAndSaveMovie("Se7en", 1995, Genre.THRILLER, 8.6, List.of(davidFincher));
+        Movie se7en = createAndSaveMovie("Se7en", 1995, Genre.THRILLER, 8.6, 807, List.of(davidFincher));
         createAndSaveCastEntry(se7en, bradPitt, "Detective David Mills");
         createAndSaveCastEntry(se7en, morganFreeman, "Detective William Somerset");
 
-        Movie goodBadUgly = createAndSaveMovie("The Good, the Bad and the Ugly", 1966, Genre.WESTERN, 8.8, List.of(sergioLeone));
+        Movie goodBadUgly = createAndSaveMovie("The Good, the Bad and the Ugly", 1966, Genre.WESTERN, 8.8, 429, List.of(sergioLeone));
         createAndSaveCastEntry(goodBadUgly, clintEastwood, "Blondie");
 
-        Movie t2 = createAndSaveMovie("Terminator 2: Judgment Day", 1991, Genre.SCIFI, 8.6, List.of(jamesCameron));
+        Movie t2 = createAndSaveMovie("Terminator 2: Judgment Day", 1991, Genre.SCIFI, 8.6, 280, List.of(jamesCameron));
         createAndSaveCastEntry(t2, arnoldSchwarzenegger, "The Terminator");
 
-        Movie shining = createAndSaveMovie("The Shining", 1980, Genre.HORROR, 8.4, List.of(stanleyKubrick));
+        Movie shining = createAndSaveMovie("The Shining", 1980, Genre.HORROR, 8.4, 694, List.of(stanleyKubrick));
         createAndSaveCastEntry(shining, jackNicholson, "Jack Torrance");
 
-        Movie unforgiven = createAndSaveMovie("Unforgiven", 1992, Genre.WESTERN, 8.2, List.of(clintEastwood));
+        Movie unforgiven = createAndSaveMovie("Unforgiven", 1992, Genre.WESTERN, 8.2, 33, List.of(clintEastwood));
         createAndSaveCastEntry(unforgiven, clintEastwood, "William Munny");
         createAndSaveCastEntry(unforgiven, morganFreeman, "Ned Logan");
     }
@@ -119,9 +119,9 @@ public class DataInitializer implements CommandLineRunner {
         return personRepository.save(Person.builder().name(name).birthYear(birthYear).nationality(nationality).build());
     }
 
-    private Movie createAndSaveMovie(String title, int year, Genre genre, double rating, List<Person> directors) {
+    private Movie createAndSaveMovie(String title, int year, Genre genre, double rating, Integer tmdbId, List<Person> directors) {
         Movie movie = Movie.builder()
-                .title(title).releaseYear(year).genre(genre).rating(rating)
+                .title(title).releaseYear(year).genre(genre).rating(rating).tmdbId(tmdbId)
                 .build();
         movie.getDirectors().addAll(directors);
         return movieRepository.save(movie);
