@@ -44,5 +44,7 @@ tmdb:
   image-base-url: https://image.tmdb.org/t/p/w500
 graphql:
   # Instrumentation configuration
-  max-query-depth: 10
+  # 15, not 10: the standard introspection query is depth 13, so anything lower
+  # breaks GraphiQL docs/autocomplete and codegen tooling.
+  max-query-depth: 15
   slow-resolver-threshold-ms: 100

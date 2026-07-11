@@ -21,5 +21,7 @@ public interface ReviewRepository extends JpaRepository<Review, Long> {
 
     boolean existsByMovieIdAndUserId(Long movieId, Long userId);
 
+    void deleteByMovieId(Long movieId);
+
     boolean existsByTvShowIdAndUserId(Long tvShowId, Long userId);
 }

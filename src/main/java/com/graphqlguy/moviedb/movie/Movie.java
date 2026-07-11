@@ -23,13 +23,16 @@ public class Movie implements SearchResult {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+    @Column(length = 200)
     private String title;
     private Integer releaseYear;
     @Enumerated(EnumType.STRING)
     private Genre genre;
     private Double rating;
     private Integer runtime;
+    @Column(length = 2000)
     private String plot;
+    @Column(length = 500)
     private String posterUrl;
     private Integer tmdbId;
 

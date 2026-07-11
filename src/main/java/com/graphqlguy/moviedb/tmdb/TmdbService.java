@@ -3,9 +3,12 @@ package com.graphqlguy.moviedb.tmdb;
 import com.github.benmanes.caffeine.cache.Cache;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.client.JdkClientHttpRequestFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestClient;
 
+import java.net.http.HttpClient;
+import java.time.Duration;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -22,7 +25,18 @@ public class TmdbService {
 
     private final TmdbProperties tmdbProperties;
     private final Cache<Integer, CommunityRating> ratingCache;
-    private final RestClient restClient = RestClient.create();
+    // Without timeouts the JDK client waits forever; a hung TMDB call would block
+    // fetchMovieRatings (executor.close() waits for all tasks) and the whole query with it.
+    private final RestClient restClient = RestClient.builder()
+            .requestFactory(timeoutRequestFactory())
+            .build();
+
+    private static JdkClientHttpRequestFactory timeoutRequestFactory() {
+        JdkClientHttpRequestFactory factory = new JdkClientHttpRequestFactory(
+                HttpClient.newBuilder().connectTimeout(Duration.ofSeconds(5)).build());
+        factory.setReadTimeout(Duration.ofSeconds(10));
+        return factory;
+    }
 
     public List<TmdbResult> search(String title) {
         if (!tmdbProperties.hasApiKey()) {

@@ -99,8 +99,8 @@ public class PersonController {
     }
 
     @MutationMapping
-    DeletePersonResponse deletePerson(@Argument Long id) {
-        return personService.delete(id);
+    DeletePersonResponse deletePerson(@Argument Long id, @Argument boolean force) {
+        return personService.delete(id, force);
     }
 
 

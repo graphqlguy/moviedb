@@ -9,17 +9,18 @@ directive @Pattern(regexp: String!, message: String = "graphql.validation.Patter
 
 type Query {
     moviesAll: [Movie!]!
-    movies(filter: MovieFilter, page: Int = 0, size: Int = 10, sort: MovieSort): MoviePage!
+    # page/size are @Range-validated so bad values fail as BAD_REQUEST instead of reaching PageRequest.of and blowing up as 500s
+    movies(filter: MovieFilter, page: Int = 0 @Range(min: 0), size: Int = 10 @Range(min: 1, max: 100), sort: MovieSort): MoviePage!
     movie(id: ID!): Movie
     searchMovies(title: String!): [Movie]
     moviesByIds(ids: [ID!]!): [Movie]
 
     tvShow(id: ID!): TvShow
-    tvShows(page: Int = 0, size: Int = 10): TvShowPage!
+    tvShows(page: Int = 0 @Range(min: 0), size: Int = 10 @Range(min: 1, max: 100)): TvShowPage!
     search(query: String!): [SearchResult!]!
 
     person(id: ID!): Person
-    people(page: Int = 0, size: Int = 20): PersonPage!
+    people(page: Int = 0 @Range(min: 0), size: Int = 20 @Range(min: 1, max: 100)): PersonPage!
     searchPeople(name: String!): [Person!]!
 
     """Search TMDB (The Movie Database) for movies by title"""
@@ -169,7 +170,8 @@ type Mutation {
     deleteMovie(id: ID!): DeleteMovieResponse!
     createPerson(input: CreatePersonInput!): Person!
     updatePerson(input: UpdatePersonInput!): Person!
-    deletePerson(id: ID!): DeletePersonResponse!
+    "Deletes a person. With force: true, all movie/TV credits are unlinked first; otherwise a linked person yields a structured error."
+    deletePerson(id: ID!, force: Boolean! = false): DeletePersonResponse!
     login(input: LoginInput!): AuthResponse!
     """Create a new USER account and sign in immediately"""
     register(input: RegisterInput!): AuthResponse!
@@ -288,6 +290,7 @@ type DeletePersonResponse {
 
 enum DeletePersonError {
     LINKED_TO_MOVIE
+    LINKED_TO_TV_SHOW
 }
 
 """A television show"""

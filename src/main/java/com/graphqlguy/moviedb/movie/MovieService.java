@@ -1,6 +1,7 @@
 package com.graphqlguy.moviedb.movie;
 
 import com.graphqlguy.moviedb.exception.EntityNotFoundException;
+import com.graphqlguy.moviedb.review.ReviewRepository;
 import com.graphqlguy.moviedb.shared.SortOrder;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -23,6 +24,7 @@ import java.util.function.Consumer;
 public class MovieService {
 
     private final MovieRepository movieRepository;
+    private final ReviewRepository reviewRepository;
 
 
     List<Movie> findAll() {
@@ -110,6 +112,7 @@ public class MovieService {
             return new DeleteMovieResponse(false, "Movie not found for Id = " + id, null);
         }
 
+        reviewRepository.deleteByMovieId(id);
         movieRepository.deleteById(id);
         return new DeleteMovieResponse(true, "Movie deleted successfully", id);
     }

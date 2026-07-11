@@ -80,22 +80,39 @@ public class PersonService {
 
     @Transactional
     @PreAuthorize("hasRole('ADMIN')")
-    DeletePersonResponse delete(final Long id) {
-        log.debug("Deleting person {}", id);
+    DeletePersonResponse delete(final Long id, final boolean force) {
+        log.debug("Deleting person {} (force={})", id, force);
         final Optional<Person> personOptional = personRepository.findById(id);
         if (personOptional.isEmpty()) {
             throw new EntityNotFoundException("Person", id);
         }
 
         final Person person = personOptional.get();
-        if (movieCastRepository.existsByPerson(person) || movieRepository.existsByDirectorsContaining(person)) {
-            return new DeletePersonResponse(false, DeletePersonError.LINKED_TO_MOVIE, null);
+        if (force) {
+            unlinkCredits(person);
+        } else {
+            if (movieCastRepository.existsByPerson(person) || movieRepository.existsByDirectorsContaining(person)) {
+                return new DeletePersonResponse(false, DeletePersonError.LINKED_TO_MOVIE, null);
+            }
+            if (tvShowCastRepository.existsByPersonId(person.getId()) || tvShowRepository.existsByCreatorsContaining(person)) {
+                return new DeletePersonResponse(false, DeletePersonError.LINKED_TO_TV_SHOW, null);
+            }
         }
 
         personRepository.delete(person);
         return new DeletePersonResponse(true, null, id);
+    }
 
-
+    // Every FK reference to the person must go before the row can be deleted:
+    // cast credits are owned rows (deleted), director/creator links are join-table
+    // entries removed via the owning side's collection.
+    private void unlinkCredits(final Person person) {
+        movieCastRepository.deleteByPerson(person);
+        tvShowCastRepository.deleteByPersonId(person.getId());
+        movieRepository.findByDirectorsContaining(person)
+                .forEach(movie -> movie.getDirectors().remove(person));
+        tvShowRepository.findByCreatorsContaining(person)
+                .forEach(show -> show.getCreators().remove(person));
     }
 
     public Map<Long, List<Person>> findDirectorsByMovieIds(final List<Long> movieIds) {
