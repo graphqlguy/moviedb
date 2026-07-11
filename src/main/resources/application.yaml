@@ -23,6 +23,9 @@ spring:
   graphql:
     graphiql:
       enabled: true
+    cors:
+      allowed-origins: http://localhost:5173
+      allow-credentials: true
   threads:
     virtual:
       enabled: true
@@ -32,3 +35,12 @@ jwt:
 demo:
   # Artificial resolver latency for demoing batching / parallel field fetching. 0 = no delay.
   latency: 1s
+tmdb:
+  # API Read Access Token (v4); empty fallback keeps the app fully usable without a key
+  api-key: ${TMDB_API_KEY:}
+  base-url: https://api.themoviedb.org/3
+  image-base-url: https://image.tmdb.org/t/p/w500
+graphql:
+  # Instrumentation configuration
+  max-query-depth: 10
+  slow-resolver-threshold-ms: 100

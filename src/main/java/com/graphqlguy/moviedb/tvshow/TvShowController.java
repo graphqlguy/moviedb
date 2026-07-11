@@ -1,7 +1,8 @@
+package com.graphqlguy.moviedb.tvshow;
+
 import com.graphqlguy.moviedb.exception.EntityNotFoundException;
 import com.graphqlguy.moviedb.movie.MovieService;
 import com.graphqlguy.moviedb.person.Person;
-import com.graphqlguy.moviedb.tvshow.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.graphql.data.method.annotation.Argument;

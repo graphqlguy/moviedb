@@ -1,12 +1,11 @@
 package com.graphqlguy.moviedb;
 
-import com.graphqlguy.moviedb.config.DemoProperties;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.boot.context.properties.EnableConfigurationProperties;
+import org.springframework.boot.context.properties.ConfigurationPropertiesScan;
 
 @SpringBootApplication
-@EnableConfigurationProperties(DemoProperties.class)
+@ConfigurationPropertiesScan
 public class MoviedbApplication {
 
 	public static void main(String[] args) {

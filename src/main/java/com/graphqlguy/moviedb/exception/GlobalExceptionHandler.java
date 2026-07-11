@@ -3,6 +3,8 @@ package com.graphqlguy.moviedb.exception;
 import graphql.GraphQLError;
 import graphql.GraphqlErrorBuilder;
 import graphql.schema.DataFetchingEnvironment;
+import jakarta.validation.ConstraintViolation;
+import jakarta.validation.ConstraintViolationException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.graphql.data.method.annotation.GraphQlExceptionHandler;
 import org.springframework.graphql.execution.ErrorType;
@@ -47,6 +49,18 @@ public class GlobalExceptionHandler {
         return GraphqlErrorBuilder.newError(env)
                 .message(ex.getMessage())
                 .errorType(ErrorType.BAD_REQUEST)
+                .build();
+    }
+
+    @GraphQlExceptionHandler
+    public GraphQLError handleConstraintViolation(ConstraintViolationException ex,
+                                                  DataFetchingEnvironment env) {
+        ConstraintViolation<?> first = ex.getConstraintViolations().iterator().next();
+        String field = first.getPropertyPath().toString();
+        return GraphqlErrorBuilder.newError(env)
+                .message(field + " " + first.getMessage())
+                .errorType(ErrorType.BAD_REQUEST)
+                .extensions(Map.of("field", field))
                 .build();
     }
 

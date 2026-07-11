@@ -1,5 +1,8 @@
 scalar DateTime
 
+directive @Range(min: Int!, max: Int!) on INPUT_FIELD_DEFINITION
+directive @Size(min: Int = 0, max: Int!) on INPUT_FIELD_DEFINITION
+
 type Query {
     moviesAll: [Movie!]!
     movies(filter: MovieFilter, page: Int = 0, size: Int = 10, sort: MovieSort): MoviePage!
@@ -16,6 +19,10 @@ type Query {
     persons(page: Int = 0, size: Int = 20): PersonPage!
     searchPersons(name: String!): [Person!]!
 
+    """Search TMDB (The Movie Database) for movies by title"""
+    tmdbSearch(title: String!): [TmdbResult!]!
+    """Look up a country by its ISO 3166-1 alpha-2 code, e.g. CZ"""
+    country(code: ID!): Country
 }
 
 """Union of Movie and TvShow for cross-type search"""
@@ -93,6 +100,10 @@ type Movie {
     runtime: Int
     plot: String
     posterUrl: String
+    """The Movie Database (TMDB) external identifier"""
+    tmdbId: Int
+    """Live community rating from TMDB; null when the movie has no tmdbId or TMDB is unavailable"""
+    communityRating: CommunityRating
 }
 
 type Person {
@@ -159,8 +170,8 @@ type Mutation {
 input CreateMovieReviewInput {
     movieId: ID!
     """Rating from 1 to 10"""
-    score: Int!
-    comment: String
+    score: Int! @Range(min: 1, max: 10)
+    comment: String @Size(max: 2000)
 }
 
 """Result of deleting a review."""
@@ -259,4 +270,31 @@ type PersonPage {
     totalPages: Int!
     currentPage: Int!
     size: Int!
+}
+
+"""A movie search result from TMDB (The Movie Database)"""
+type TmdbResult {
+    tmdbId: Int!
+    title: String!
+    releaseYear: Int
+    overview: String
+    posterUrl: String
+    """TMDB community vote average on a 0-10 scale"""
+    rating: Float
+}
+
+"""Live community rating sourced from TMDB"""
+type CommunityRating {
+    """Vote average on a 0-10 scale"""
+    voteAverage: Float!
+    voteCount: Int!
+}
+
+type Country {
+    "ISO 3166-1 alpha-2 code, e.g. CZ"
+    code: ID!
+    name: String!
+    emoji: String
+    capital: String
+    currency: String
 }
