@@ -27,6 +27,9 @@ public class Movie {
     @Enumerated(EnumType.STRING)
     private Genre genre;
     private Double rating;
+    private Integer runtime;
+    private String plot;
+    private String posterUrl;
 
     @Builder.Default
     @ManyToMany

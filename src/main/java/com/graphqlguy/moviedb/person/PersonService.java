@@ -6,9 +6,14 @@ import com.graphqlguy.moviedb.movie.Movie;
 import com.graphqlguy.moviedb.movie.MovieCast;
 import com.graphqlguy.moviedb.movie.MovieCastRepository;
 import com.graphqlguy.moviedb.movie.MovieRepository;
+import com.graphqlguy.moviedb.tvshow.TvShowCast;
+import com.graphqlguy.moviedb.tvshow.TvShowCastRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.graphql.data.ArgumentValue;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
@@ -29,6 +34,7 @@ public class PersonService {
     private final PersonRepository personRepository;
     private final MovieCastRepository movieCastRepository;
     private final MovieRepository movieRepository;
+    private final TvShowCastRepository tvShowCastRepository;
 
     List<Person> getAllPeople() {
         log.debug("Getting all people");
@@ -102,6 +108,33 @@ public class PersonService {
     public Map<Long, List<MovieCast>> findCastByMovieIds(final List<Long> movieIds) {
         return movieCastRepository.findWithPersonByMovieIdIn(movieIds).stream()
                 .collect(Collectors.groupingBy(movieCast -> movieCast.getMovie().getId()));
+    }
+
+    public Optional<Person> findById(Long id) {
+        return personRepository.findById(id);
+    }
+
+    public PersonPage findAll(int page, int size) {
+        Page<Person> result = personRepository.findAll(
+                PageRequest.of(page, size, Sort.by("name").ascending().and(Sort.by("id"))));
+        return new PersonPage(result.getContent(), result.getTotalElements(),
+                result.getTotalPages(), result.getNumber(), result.getSize());
+    }
+
+    public List<Person> searchByName(String name) {
+        return personRepository.findByNameContainingIgnoreCase(name);
+    }
+
+    public List<Movie> findDirectedMovies(Person person) {
+        return movieRepository.findByDirectorsContaining(person);
+    }
+
+    public List<MovieCast> findMovieCastCredits(Long personId) {
+        return movieCastRepository.findWithMovieByPersonId(personId);
+    }
+
+    public List<TvShowCast> findTvShowCastCredits(Long personId) {
+        return tvShowCastRepository.findWithTvShowByPersonId(personId);
     }
 
 }

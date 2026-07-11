@@ -1,10 +1,66 @@
+scalar DateTime
+
 type Query {
-    movies: [Movie!]!
+    moviesAll: [Movie!]!
+    movies(filter: MovieFilter, page: Int = 0, size: Int = 10, sort: MovieSort): MoviePage!
     movie(id: ID!): Movie
     searchMovies(title: String!): [Movie]
-    people: [Person!]!
     moviesByIds(ids: [ID!]!): [Movie]
+    people: [Person!]! @deprecated(reason: "Use the paginated persons query")
+
+    tvShow(id: ID!): TvShow
+    tvShows(page: Int = 0, size: Int = 10): TvShowPage!
+    search(query: String!): [SearchResult!]!
+
+    person(id: ID!): Person
+    persons(page: Int = 0, size: Int = 20): PersonPage!
+    searchPersons(name: String!): [Person!]!
+
 }
+
+"""Union of Movie and TvShow for cross-type search"""
+union SearchResult = Movie | TvShow
+
+enum MovieSortField {
+    TITLE
+    RELEASE_YEAR
+    RATING
+    RUNTIME
+}
+
+enum SortOrder {
+    ASC
+    DESC
+}
+
+input MovieFilter {
+    genre: Genre
+    minRating: Float
+    maxRating: Float
+    minYear: Int
+    maxYear: Int
+    titleContains: String
+    inTheaters: Boolean
+}
+
+input MovieSort {
+    field: MovieSortField
+    order: SortOrder
+}
+
+type MoviePage {
+    content: [Movie!]!
+    totalElements: Int!
+    totalPages: Int!
+    currentPage: Int!
+    size: Int!
+    isFirst: Boolean!
+    isLast: Boolean!
+    hasNext: Boolean!
+    hasPrevious: Boolean!
+}
+
+
 
 enum Genre {
     ACTION
@@ -33,6 +89,10 @@ type Movie {
     directors: [Person!]!
     cast: [MovieCast!]!
     reviews: [Review!]!
+    """Runtime in minutes"""
+    runtime: Int
+    plot: String
+    posterUrl: String
 }
 
 type Person {
@@ -40,12 +100,19 @@ type Person {
     name: String!
     birthYear: Int
     nationality: String
+    """Movies this person directed"""
+    directedMovies: [Movie!]!
+    """This person's acting credits in movies"""
+    movieCastCredits: [MovieCast!]!
+    """This person's acting credits in TV shows"""
+    tvShowCastCredits: [TvShowCast!]!
 }
 
 type MovieCast {
     id: ID!
     characterName: String!
     person: Person!
+    movie: Movie!
 }
 
 type AuthResponse {
@@ -71,7 +138,7 @@ type Review {
     """Rating from 1 to 10"""
     score: Int!
     comment: String
-    createdAt: String!
+    createdAt: DateTime!
     user: User!
 }
 
@@ -135,4 +202,61 @@ type DeletePersonResponse {
 
 enum DeletePersonError {
     LINKED_TO_MOVIE
+}
+
+"""A television show"""
+type TvShow {
+    id: ID!
+    title: String!
+    genre: Genre!
+    """Average rating on a scale of 0-10"""
+    rating: Float
+    posterUrl: String
+    startYear: Int!
+    """Null while the show is still airing"""
+    endYear: Int
+    seasons: Int
+    plot: String
+    inProduction: Boolean!
+    creators: [Person!]!
+    cast: [TvShowCast!]!
+    episodes: [Episode!]!
+}
+
+"""A single episode of a TV show"""
+type Episode {
+    id: ID!
+    seasonNumber: Int!
+    episodeNumber: Int!
+    title: String!
+    overview: String
+    """Runtime in minutes"""
+    runtime: Int
+    airYear: Int
+}
+
+"""An actor's role in a TV show, linking a person to a character"""
+type TvShowCast {
+    id: ID!
+    characterName: String!
+    person: Person!
+    tvShow: TvShow!
+}
+
+"""A page of TV shows"""
+type TvShowPage {
+    content: [TvShow!]!
+    totalElements: Int!
+    totalPages: Int!
+    currentPage: Int!
+    size: Int!
+}
+
+"""A page of people"""
+type PersonPage {
+    content: [Person!]!
+    totalElements: Int!
+    totalPages: Int!
+    currentPage: Int!
+    size: Int!
 }
