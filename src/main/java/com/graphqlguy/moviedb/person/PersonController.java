@@ -1,9 +1,12 @@
 package com.graphqlguy.moviedb.person;
 
 import com.graphqlguy.moviedb.config.LatencySimulator;
+import com.graphqlguy.moviedb.country.Country;
+import com.graphqlguy.moviedb.country.CountryService;
 import com.graphqlguy.moviedb.exception.EntityNotFoundException;
 import com.graphqlguy.moviedb.movie.Movie;
 import com.graphqlguy.moviedb.movie.MovieCast;
+import com.graphqlguy.moviedb.tvshow.TvShow;
 import com.graphqlguy.moviedb.tvshow.TvShowCast;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -21,12 +24,8 @@ import java.util.stream.Collectors;
 public class PersonController {
 
     private final PersonService personService;
+    private final CountryService countryService;
     private final LatencySimulator latencySimulator;
-
-    @QueryMapping
-    List<Person> people() {
-        return personService.getAllPeople();
-    }
 
     @BatchMapping
     Map<Movie, List<Person>> directors(List<Movie> movies) {
@@ -46,18 +45,37 @@ public class PersonController {
     }
 
     @QueryMapping
-    PersonPage persons(@Argument Integer page, @Argument Integer size) {
+    PersonPage people(@Argument Integer page, @Argument Integer size) {
         return personService.findAll(page != null ? page : 0, size != null ? size : 20);
     }
 
     @QueryMapping
-    List<Person> searchPersons(@Argument String name) {
+    List<Person> searchPeople(@Argument String name) {
         return personService.searchByName(name);
     }
 
     @SchemaMapping(typeName = "Person")
     List<Movie> directedMovies(Person person) {
         return personService.findDirectedMovies(person);
+    }
+
+    @SchemaMapping(typeName = "Person")
+    List<TvShow> createdShows(Person person) {
+        return personService.findCreatedShows(person);
+    }
+
+    @SchemaMapping(typeName = "Person")
+    Country country(Person person) {
+        if (person.getCountryCode() == null) {
+            return null;
+        }
+        try {
+            return countryService.findByCode(person.getCountryCode());
+        } catch (Exception e) {
+            // The external countries API being down should not break person queries
+            log.warn("Could not resolve country {} from external API: {}", person.getCountryCode(), e.getMessage());
+            return null;
+        }
     }
 
     @SchemaMapping(typeName = "Person")

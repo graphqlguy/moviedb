@@ -6,5 +6,5 @@ public record UpdatePersonInput(
         Long id,
         ArgumentValue<String> name,
         ArgumentValue<Integer> birthYear,
-        ArgumentValue<String> nationality) {
+        ArgumentValue<String> countryCode) {
 }

@@ -44,6 +44,16 @@ public class MovieController {
     }
 
     @MutationMapping
+    Movie createMovie(@Argument CreateMovieInput input) {
+        return movieService.createMovie(input);
+    }
+
+    @MutationMapping
+    Movie updateMovie(@Argument UpdateMovieInput input) {
+        return movieService.updateMovie(input);
+    }
+
+    @MutationMapping
     DeleteMovieResponse deleteMovie(@Argument Long id) {
         return movieService.deleteMovie(id);
     }

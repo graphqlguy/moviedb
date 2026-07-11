@@ -1,6 +1,7 @@
 package com.graphqlguy.moviedb.review;
 
 import com.graphqlguy.moviedb.movie.Movie;
+import com.graphqlguy.moviedb.tvshow.TvShow;
 import com.graphqlguy.moviedb.user.AppUser;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -47,6 +48,10 @@ public class Review {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "movie_id")
     private Movie movie;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "tv_show_id")
+    private TvShow tvShow;
 
     @PrePersist
     public void prePersist() {

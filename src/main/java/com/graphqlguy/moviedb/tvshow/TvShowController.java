@@ -2,6 +2,7 @@ package com.graphqlguy.moviedb.tvshow;
 
 import com.graphqlguy.moviedb.exception.EntityNotFoundException;
 import com.graphqlguy.moviedb.movie.MovieService;
+import com.graphqlguy.moviedb.shared.SearchResult;
 import com.graphqlguy.moviedb.person.Person;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -85,8 +86,8 @@ public class TvShowController {
     }
 
     @QueryMapping
-    List<Object> search(@Argument String query) {
-        List<Object> results = new ArrayList<>();
+    List<SearchResult> search(@Argument String query) {
+        List<SearchResult> results = new ArrayList<>();
         results.addAll(movieService.searchByTitle(query));
         results.addAll(tvShowService.searchByTitle(query));
         return results;

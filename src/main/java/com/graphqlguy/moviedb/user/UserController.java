@@ -16,4 +16,9 @@ public class UserController {
         return userService.login(input);
     }
 
+    @MutationMapping
+    AuthResponse register(@Argument RegisterInput input) {
+        return userService.register(input);
+    }
+
 }
