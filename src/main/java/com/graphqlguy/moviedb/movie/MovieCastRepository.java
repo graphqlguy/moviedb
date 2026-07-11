@@ -13,6 +13,8 @@ public interface MovieCastRepository extends JpaRepository<MovieCast, Long> {
 
     boolean existsByPerson(Person person);
 
+    void deleteByPerson(Person person);
+
     @Query("select mc from MovieCast mc join fetch mc.person where mc.movie.id in :ids")
     List<MovieCast> findWithPersonByMovieIdIn(@Param("ids") List<Long> ids);
 

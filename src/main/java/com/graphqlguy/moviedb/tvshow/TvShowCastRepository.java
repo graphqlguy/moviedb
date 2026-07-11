@@ -9,6 +9,10 @@ import java.util.Set;
 
 public interface TvShowCastRepository extends JpaRepository<TvShowCast, Long> {
 
+    boolean existsByPersonId(Long personId);
+
+    void deleteByPersonId(Long personId);
+
     @Query("select tc from TvShowCast tc join fetch tc.person where tc.tvShow.id in :ids")
     List<TvShowCast> findWithPersonByTvShowIdIn(@Param("ids") Set<Long> ids);
 

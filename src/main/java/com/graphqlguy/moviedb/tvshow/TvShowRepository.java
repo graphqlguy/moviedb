@@ -14,6 +14,8 @@ public interface TvShowRepository extends JpaRepository<TvShow, Long> {
 
     List<TvShow> findByCreatorsContaining(Person person);
 
+    boolean existsByCreatorsContaining(Person person);
+
     @Query("select distinct s from TvShow s left join fetch s.creators where s.id in :ids")
     List<TvShow> findWithCreatorsByIdIn(@Param("ids") Set<Long> ids);
 }

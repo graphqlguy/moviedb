@@ -6,6 +6,7 @@ import graphql.schema.DataFetchingEnvironment;
 import jakarta.validation.ConstraintViolation;
 import jakarta.validation.ConstraintViolationException;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.graphql.data.method.annotation.GraphQlExceptionHandler;
 import org.springframework.graphql.execution.ErrorType;
 import org.springframework.security.access.AccessDeniedException;
@@ -61,6 +62,20 @@ public class GlobalExceptionHandler {
                 .message(field + " " + first.getMessage())
                 .errorType(ErrorType.BAD_REQUEST)
                 .extensions(Map.of("field", field))
+                .build();
+    }
+
+    // Safety net for DB constraint violations (FKs, unique constraints, column
+    // limits): without this they fall through to handleUnhandled and surface as
+    // opaque 500s. Note: this is Spring's DataAccessException, not the jakarta
+    // bean-validation ConstraintViolationException handled above.
+    @GraphQlExceptionHandler
+    public GraphQLError handleDataIntegrityViolation(final DataIntegrityViolationException ex,
+                                                     DataFetchingEnvironment env) {
+        log.warn("Data integrity violation at path={}: {}", env.getExecutionStepInfo().getPath(), ex.getMessage());
+        return GraphqlErrorBuilder.newError(env)
+                .message("The request conflicts with existing data and could not be completed")
+                .errorType(ErrorType.BAD_REQUEST)
                 .build();
     }
 

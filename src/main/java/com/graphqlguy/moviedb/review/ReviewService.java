@@ -2,6 +2,7 @@ package com.graphqlguy.moviedb.review;
 
 import com.graphqlguy.moviedb.exception.DuplicateReviewException;
 import com.graphqlguy.moviedb.exception.EntityNotFoundException;
+import com.graphqlguy.moviedb.exception.InvalidInputException;
 import com.graphqlguy.moviedb.movie.Movie;
 import com.graphqlguy.moviedb.movie.MovieRepository;
 import com.graphqlguy.moviedb.tvshow.TvShow;
@@ -9,6 +10,7 @@ import com.graphqlguy.moviedb.tvshow.TvShowRepository;
 import com.graphqlguy.moviedb.user.AppUser;
 import com.graphqlguy.moviedb.user.UserRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
@@ -38,7 +40,7 @@ public class ReviewService {
 
         // The @oneOf directive guarantees exactly one of movieId/tvShowId is set
         if (input.subject().movieId() != null) {
-            Long movieId = Long.parseLong(input.subject().movieId());
+            Long movieId = parseId(input.subject().movieId(), "movieId");
             Movie movie = movieRepository.findById(movieId)
                     .orElseThrow(() -> new EntityNotFoundException("Movie", movieId));
             if (reviewRepository.existsByMovieIdAndUserId(movieId, user.getId())) {
@@ -46,7 +48,7 @@ public class ReviewService {
             }
             review.movie(movie);
         } else {
-            Long tvShowId = Long.parseLong(input.subject().tvShowId());
+            Long tvShowId = parseId(input.subject().tvShowId(), "tvShowId");
             TvShow tvShow = tvShowRepository.findById(tvShowId)
                     .orElseThrow(() -> new EntityNotFoundException("TvShow", tvShowId));
             if (reviewRepository.existsByTvShowIdAndUserId(tvShowId, user.getId())) {
@@ -55,9 +57,26 @@ public class ReviewService {
             review.tvShow(tvShow);
         }
 
-        Review saved = reviewRepository.save(review.build());
+        Review saved;
+        try {
+            saved = reviewRepository.save(review.build());
+        } catch (DataIntegrityViolationException e) {
+            // Two concurrent createReview calls can both pass the existsBy pre-check
+            // above; the unique constraint on the reviews table catches the loser here.
+            throw new DuplicateReviewException();
+        }
         reviewPublisher.publish(ReviewNotification.of(saved));
         return saved;
+    }
+
+    private static Long parseId(String rawId, String field) {
+        try {
+            return Long.parseLong(rawId);
+        } catch (NumberFormatException e) {
+            // The GraphQL ID scalar accepts any string, so garbage like "abc" reaches
+            // us here; classify it as bad input rather than an unexpected 500.
+            throw new InvalidInputException(field, "must be a numeric ID");
+        }
     }
 
     @Transactional
