@@ -90,10 +90,14 @@ public class DataInitializer {
                     .biography("Director of Top Gun: Maverick.").photoUrl(BASE + "oWLUXWY0j8TYzwnf2wETYWO181S.jpg").build());
             Person anthonyRusso = personRepo.save(Person.builder().name("Anthony Russo").birthYear(1970).countryCode("US")
                     .biography("Co-director of Avengers: Endgame.").photoUrl(BASE + "xbINBnWn28YygYWUJ1aSAw0xPRv.jpg").build());
+            Person joeRusso = personRepo.save(Person.builder().name("Joe Russo").birthYear(1971).countryCode("US")
+                    .biography("Co-director of Avengers: Endgame.").photoUrl(BASE + "o0OXjFzL10jCy89iAs7UzzSbyoK.jpg").build());
             Person lanaWachowski = personRepo.save(Person.builder().name("Lana Wachowski").birthYear(1965).countryCode("US")
                     .biography("Co-creator of the Matrix franchise.").photoUrl(BASE + "5KuRHnoH8UkSCFHMKf4YjKOvzOM.jpg").build());
+            Person lillyWachowski = personRepo.save(Person.builder().name("Lilly Wachowski").birthYear(1967).countryCode("US")
+                    .biography("Co-creator of the Matrix franchise.").photoUrl(BASE + "rCScAjSpeKA19BLNR07MqNNeeTT.jpg").build());
             Person sergioLeone = personRepo.save(Person.builder().name("Sergio Leone").birthYear(1929).countryCode("IT")
-                    .biography("Master of the Spaghetti Western genre.").photoUrl(BASE + "wHHDEqHpN5d4xdOA6yEpI2Qrh2M.jpg").build());
+                    .biography("Master of the Spaghetti Western genre.").photoUrl(BASE + "2576qoW8l9Z1nKGM10ar60aIwUu.jpg").build());
             Person georgeLucas = personRepo.save(Person.builder().name("George Lucas").birthYear(1944).countryCode("US")
                     .biography("Creator of Star Wars and Indiana Jones.").photoUrl(BASE + "mDLDvsx8PaZoEThkBdyaG1JxPdf.jpg").build());
             Person irvinKershner = personRepo.save(Person.builder().name("Irvin Kershner").birthYear(1923).countryCode("US")
@@ -101,14 +105,14 @@ public class DataInitializer {
             Person richardMarquand = personRepo.save(Person.builder().name("Richard Marquand").birthYear(1937).countryCode("GB")
                     .biography("Director of Return of the Jedi.").photoUrl(BASE + "eEalDQpLsXJqejPDQ3MWGe95UHT.jpg").build());
             Person jJAbrams = personRepo.save(Person.builder().name("J.J. Abrams").birthYear(1966).countryCode("US")
-                    .biography("Director of Star Wars: The Force Awakens and The Rise of Skywalker.").photoUrl(BASE + "uKtTNXk2aB52ljJIQtR3tqLy8B3.jpg").build());
+                    .biography("Director of Star Wars: The Force Awakens and The Rise of Skywalker.").photoUrl(BASE + "k4IWd2RV5kY1kAL2VgKQwFvnCLP.jpg").build());
             Person rianJohnson = personRepo.save(Person.builder().name("Rian Johnson").birthYear(1973).countryCode("US")
-                    .biography("Director of The Last Jedi and Knives Out.").photoUrl(BASE + "4W1hMTe6MoUVbBFQmbkWrGamZ8V.jpg").build());
+                    .biography("Director of The Last Jedi and Knives Out.").photoUrl(BASE + "ggwlJvCn0laNGjcvwGchuwC00hQ.jpg").build());
             Person jonathanMostow = personRepo.save(Person.builder().name("Jonathan Mostow").birthYear(1961).countryCode("US")
                     .biography("Director of Terminator 3: Rise of the Machines.").photoUrl(BASE + "yRMYvjGLIf0aOUKVLnU6jSpR1oQ.jpg").build());
             Person mcg = personRepo.save(Person.builder().name("McG").birthYear(1968).countryCode("US")
                     .biography("Director of Terminator Salvation.").photoUrl(BASE + "sEcoHVCqc2IrJkxgixGHrDytsyd.jpg").build());
-            Person alanTaylor = personRepo.save(Person.builder().name("Alan Taylor").birthYear(1965).countryCode("US")
+            Person alanTaylor = personRepo.save(Person.builder().name("Alan Taylor").birthYear(1959).countryCode("US")
                     .biography("Director of Terminator Genisys.").photoUrl(BASE + "sXC2wNRo7lshghNnNaPdWQ9sqKe.jpg").build());
             Person timMiller = personRepo.save(Person.builder().name("Tim Miller").birthYear(1964).countryCode("US")
                     .biography("Director of Deadpool and Terminator: Dark Fate.").photoUrl(BASE + "dCyBYwhO76j5wA96HPb6k5xk2Le.jpg").build());
@@ -182,7 +186,7 @@ public class DataInitializer {
                     .biography("Acclaimed stage and screen actor.").photoUrl(BASE + "coWjgMEYJjk2OrNddlXCBm8EIr3.jpg").build());
             Person chadwickBoseman = personRepo.save(Person.builder().name("Chadwick Boseman").birthYear(1976).countryCode("US")
                     .biography("Star of Black Panther.").photoUrl(BASE + "1lz1wLOuPFSRIratMz0SxD3tkJ.jpg").build());
-            Person timotheeChalamet = personRepo.save(Person.builder().name("Timothée Chalamet").birthYear(2000).countryCode("US")
+            Person timotheeChalamet = personRepo.save(Person.builder().name("Timothée Chalamet").birthYear(1995).countryCode("US")
                     .biography("Rising star of Dune and Call Me by Your Name.").photoUrl(BASE + "dFxpwRpmzpVfP1zjluH68DeQhyj.jpg").build());
             Person scarlettJohansson = personRepo.save(Person.builder().name("Scarlett Johansson").birthYear(1984).countryCode("US")
                     .biography("Star of the Avengers franchise.").photoUrl(BASE + "mjReG6rR7NPMEIWb1T4YWtV11ty.jpg").build());
@@ -195,7 +199,7 @@ public class DataInitializer {
             Person clintEastwood = personRepo.save(Person.builder().name("Clint Eastwood").birthYear(1930).countryCode("US")
                     .biography("Iconic actor and director known for Westerns and thrillers.").photoUrl(BASE + "8TwdCfeOZH7ucRlfLZ6wObxa7cO.jpg").build());
             Person ewanMcGregor = personRepo.save(Person.builder().name("Ewan McGregor").birthYear(1971).countryCode("GB")
-                    .biography("Known for the Star Wars prequel trilogy and Trainspotting.").photoUrl(BASE + "bnkBMpQlU1pTEtAJzLlKoaIIFnI.jpg").build());
+                    .biography("Known for the Star Wars prequel trilogy and Trainspotting.").photoUrl(BASE + "tw6lVBh0DvAUkCd1jsU98yD1usk.jpg").build());
             Person daisyRidley = personRepo.save(Person.builder().name("Daisy Ridley").birthYear(1992).countryCode("GB")
                     .biography("Star of the Star Wars sequel trilogy as Rey.").photoUrl(BASE + "iVboQmgPC3tYFjezBjrVECJRS8n.jpg").build());
             Person lindaHamilton = personRepo.save(Person.builder().name("Linda Hamilton").birthYear(1956).countryCode("US")
@@ -288,6 +292,8 @@ public class DataInitializer {
                     .biography("Known for Alien and Top Gun.").photoUrl(BASE + "oWFCyBLm1lsbsbT5Nmx3SPMaqFZ.jpg").build());
             Person arnoldSchwarzenegger = personRepo.save(Person.builder().name("Arnold Schwarzenegger").birthYear(1947).countryCode("AT")
                     .biography("Action legend and former California governor.").photoUrl(BASE + "dgCABuZp2HBehCT84O4WBp7KIoe.jpg").build());
+            Person aneurinBarnard = personRepo.save(Person.builder().name("Aneurin Barnard").birthYear(1987).countryCode("GB")
+                    .biography("Welsh actor known for Dunkirk and War & Peace.").photoUrl(BASE + "aiuFLvyaxmuglNi3nfQ3oL9qW97.jpg").build());
 
             // ── Movies ────────────────────────────────────────────────────
 
@@ -357,7 +363,7 @@ public class DataInitializer {
             saveMovie(Movie.builder().title("Avengers: Endgame").releaseYear(2019).genre(Genre.ACTION).rating(8.4).runtime(181)
                     .plot("The Avengers assemble to undo Thanos's actions and restore order to the universe.")
                     .posterUrl(BASE + "ulzhLuWrPK07P1YkdWQLZnQh1JL.jpg").tmdbId(299534).build(),
-                List.of(anthonyRusso),
+                List.of(anthonyRusso, joeRusso),
                 List.of(new CastEntry(scarlettJohansson, "Natasha Romanoff"), new CastEntry(chadwickBoseman, "T'Challa")));
 
             // SCI-FI
@@ -449,17 +455,17 @@ public class DataInitializer {
             Movie theMatrix = saveMovie(Movie.builder().title("The Matrix").releaseYear(1999).genre(Genre.SCIFI).rating(8.7).runtime(136)
                     .plot("A computer hacker learns that his world is a simulation and joins a rebellion.")
                     .posterUrl(BASE + "p96dm7sCMn4VYAStA6siNz30G1r.jpg").tmdbId(603).build(),
-                List.of(lanaWachowski),
+                List.of(lanaWachowski, lillyWachowski),
                 List.of(new CastEntry(keanuReeves, "Neo"), new CastEntry(carrieAnneMoss, "Trinity")));
             saveMovie(Movie.builder().title("The Matrix Reloaded").releaseYear(2003).genre(Genre.SCIFI).rating(7.2).runtime(138)
                     .plot("Neo and his allies race against time before the machines discover the city of Zion.")
                     .posterUrl(BASE + "aA5qHS0FbSXO8PxcxUIHbDrJyuh.jpg").tmdbId(604).build(),
-                List.of(lanaWachowski),
+                List.of(lanaWachowski, lillyWachowski),
                 List.of(new CastEntry(keanuReeves, "Neo"), new CastEntry(carrieAnneMoss, "Trinity")));
             saveMovie(Movie.builder().title("The Matrix Revolutions").releaseYear(2003).genre(Genre.SCIFI).rating(6.8).runtime(129)
                     .plot("The machine city is humanity's last hope as Neo races to stop the war between machines and man.")
                     .posterUrl(BASE + "bkkS61w94ZVMNVd8KEyyJl2tnY5.jpg").tmdbId(605).build(),
-                List.of(lanaWachowski),
+                List.of(lanaWachowski, lillyWachowski),
                 List.of(new CastEntry(keanuReeves, "Neo"), new CastEntry(carrieAnneMoss, "Trinity")));
             saveMovie(Movie.builder().title("The Matrix Resurrections").releaseYear(2021).genre(Genre.SCIFI).rating(5.7).runtime(148)
                     .plot("Neo and Trinity must choose to follow the white rabbit once more in a new matrix.")
@@ -543,7 +549,7 @@ public class DataInitializer {
                     .plot("Allied soldiers surrounded by the German Army are evacuated during a fierce battle.")
                     .posterUrl(BASE + "b4Oe15CGLL61Ped0RAS9JpqdmCt.jpg").tmdbId(374720).build(),
                 List.of(christopherNolan),
-                List.of(new CastEntry(timotheeChalamet, "Gibson"), new CastEntry(tomHardy, "Farrier")));
+                List.of(new CastEntry(aneurinBarnard, "Gibson"), new CastEntry(tomHardy, "Farrier")));
 
             // FANTASY
             saveMovie(Movie.builder().title("The Lord of the Rings: The Fellowship of the Ring").releaseYear(2001).genre(Genre.FANTASY).rating(8.8).runtime(178)
@@ -592,7 +598,7 @@ public class DataInitializer {
                     .title("The One with Barry and Mindy's Wedding").overview("Rachel is a bridesmaid at her ex's wedding.").build(),
                 Episode.builder().tvShow(friends).seasonNumber(3).episodeNumber(1).runtime(22).airYear(1996)
                     .title("The One with the Princess Leia Fantasy").overview("Ross shares a secret fantasy with Rachel.").build(),
-                Episode.builder().tvShow(friends).seasonNumber(3).episodeNumber(16).runtime(44).airYear(1997)
+                Episode.builder().tvShow(friends).seasonNumber(3).episodeNumber(16).runtime(22).airYear(1997)
                     .title("The One the Morning After").overview("Ross and Rachel have a dramatic breakup.").build(),
                 Episode.builder().tvShow(friends).seasonNumber(4).episodeNumber(1).runtime(22).airYear(1997)
                     .title("The One with the Jellyfish").overview("The gang reunites after summer apart.").build(),
@@ -626,7 +632,7 @@ public class DataInitializer {
             TvShow seinfeld = saveTvShow(TvShow.builder().title("Seinfeld").genre(Genre.COMEDY).rating(8.8)
                     .plot("A stand-up comedian and his neurotic friends deal with the mundane aspects of everyday life in New York.")
                     .posterUrl(BASE + "aCw8ONfyz3AhngVQa1E2Ss4KSUQ.jpg").tmdbId(1400).startYear(1989).endYear(1998).seasons(9).build(),
-                List.of(larryDavid),
+                List.of(larryDavid, jerrySeinfeld),
                 List.of(new CastEntry(jerrySeinfeld, "Jerry Seinfeld"), new CastEntry(juliaLouisDreyfus, "Elaine Benes"),
                         new CastEntry(jasonAlexander, "George Costanza"), new CastEntry(michaelRichards, "Cosmo Kramer")));
             episodeRepo.saveAll(List.of(
@@ -634,8 +640,6 @@ public class DataInitializer {
                     .title("The Seinfeld Chronicles").overview("Jerry tries to figure out what a woman's behavior means.").build(),
                 Episode.builder().tvShow(seinfeld).seasonNumber(2).episodeNumber(1).runtime(23).airYear(1991)
                     .title("The Ex-Girlfriend").overview("George tries to retrieve a book from his ex-girlfriend.").build(),
-                Episode.builder().tvShow(seinfeld).seasonNumber(2).episodeNumber(11).runtime(23).airYear(1993)
-                    .title("The Junior Mint").overview("Kramer accidentally drops a Junior Mint into a patient during surgery.").build(),
                 Episode.builder().tvShow(seinfeld).seasonNumber(3).episodeNumber(1).runtime(23).airYear(1991)
                     .title("The Note").overview("The gang tries to get a massage covered by insurance.").build(),
                 Episode.builder().tvShow(seinfeld).seasonNumber(3).episodeNumber(23).runtime(23).airYear(1992)
@@ -644,17 +648,19 @@ public class DataInitializer {
                     .title("The Trip").overview("Jerry and George fly to L.A. to find Kramer.").build(),
                 Episode.builder().tvShow(seinfeld).seasonNumber(4).episodeNumber(11).runtime(23).airYear(1992)
                     .title("The Contest").overview("The gang makes a bet to see who can go the longest without self-gratification.").build(),
+                Episode.builder().tvShow(seinfeld).seasonNumber(4).episodeNumber(20).runtime(23).airYear(1993)
+                    .title("The Junior Mint").overview("Kramer accidentally drops a Junior Mint into a patient during surgery.").build(),
                 Episode.builder().tvShow(seinfeld).seasonNumber(5).episodeNumber(1).runtime(23).airYear(1993)
                     .title("The Mango").overview("Jerry learns Elaine has been faking it during their relationship.").build(),
                 Episode.builder().tvShow(seinfeld).seasonNumber(5).episodeNumber(21).runtime(23).airYear(1994)
                     .title("The Opposite").overview("George decides to do the opposite of every instinct he has.").build(),
                 Episode.builder().tvShow(seinfeld).seasonNumber(6).episodeNumber(1).runtime(23).airYear(1994)
                     .title("The Chaperone").overview("Jerry dates a Miss America contestant.").build(),
-                Episode.builder().tvShow(seinfeld).seasonNumber(6).episodeNumber(14).runtime(23).airYear(1995)
+                Episode.builder().tvShow(seinfeld).seasonNumber(6).episodeNumber(12).runtime(23).airYear(1995)
                     .title("The Label Maker").overview("Jerry is given a label maker as a re-gift.").build(),
                 Episode.builder().tvShow(seinfeld).seasonNumber(7).episodeNumber(1).runtime(23).airYear(1995)
                     .title("The Engagement").overview("George decides to propose to his ex-girlfriend Susan.").build(),
-                Episode.builder().tvShow(seinfeld).seasonNumber(7).episodeNumber(21).runtime(23).airYear(1996)
+                Episode.builder().tvShow(seinfeld).seasonNumber(7).episodeNumber(24).runtime(23).airYear(1996)
                     .title("The Invitations").overview("Susan dies from licking toxic wedding invitation envelopes.").build(),
                 Episode.builder().tvShow(seinfeld).seasonNumber(8).episodeNumber(1).runtime(23).airYear(1996)
                     .title("The Foundation").overview("The gang deals with Susan's death and a new foundation in her name.").build(),
