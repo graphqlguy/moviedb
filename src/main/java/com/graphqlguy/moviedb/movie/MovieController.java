@@ -23,8 +23,14 @@ public class MovieController {
     private final MovieService movieService;
 
     @QueryMapping
-    List<Movie> movies() {
+    List<Movie> moviesAll() {
         return movieService.findAll();
+    }
+
+    @QueryMapping
+    public MoviePage movies(@Argument MovieFilter filter, @Argument Integer page,
+                            @Argument Integer size, @Argument MovieSort sort) {
+        return movieService.findMovies(filter, page != null ? page : 0, size != null ? size : 10, sort);
     }
 
     @QueryMapping
@@ -34,7 +40,7 @@ public class MovieController {
 
     @QueryMapping
     List<Movie> searchMovies(@Argument String title) {
-        return movieService.findByTitleContainingIgnoreCase(title);
+        return movieService.searchByTitle(title);
     }
 
     @MutationMapping

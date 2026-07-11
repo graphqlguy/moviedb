@@ -15,4 +15,7 @@ public interface MovieCastRepository extends JpaRepository<MovieCast, Long> {
 
     @Query("select mc from MovieCast mc join fetch mc.person where mc.movie.id in :ids")
     List<MovieCast> findWithPersonByMovieIdIn(@Param("ids") List<Long> ids);
+
+    @Query("select mc from MovieCast mc join fetch mc.movie where mc.person.id = :personId")
+    List<MovieCast> findWithMovieByPersonId(@Param("personId") Long personId);
 }

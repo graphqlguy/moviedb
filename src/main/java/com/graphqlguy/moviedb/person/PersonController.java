@@ -1,15 +1,14 @@
 package com.graphqlguy.moviedb.person;
 
 import com.graphqlguy.moviedb.config.LatencySimulator;
+import com.graphqlguy.moviedb.exception.EntityNotFoundException;
 import com.graphqlguy.moviedb.movie.Movie;
 import com.graphqlguy.moviedb.movie.MovieCast;
+import com.graphqlguy.moviedb.tvshow.TvShowCast;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.graphql.data.method.annotation.Argument;
-import org.springframework.graphql.data.method.annotation.BatchMapping;
-import org.springframework.graphql.data.method.annotation.MutationMapping;
-import org.springframework.graphql.data.method.annotation.QueryMapping;
+import org.springframework.graphql.data.method.annotation.*;
 import org.springframework.stereotype.Controller;
 
 import java.util.List;
@@ -38,6 +37,37 @@ public class PersonController {
         return movies.stream()
                 .collect(Collectors.toMap(movie -> movie,
                         movie -> directorsByMovieId.getOrDefault(movie.getId(), List.of())));
+    }
+
+    @QueryMapping
+    Person person(@Argument Long id) {
+        return personService.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("Person", id));
+    }
+
+    @QueryMapping
+    PersonPage persons(@Argument Integer page, @Argument Integer size) {
+        return personService.findAll(page != null ? page : 0, size != null ? size : 20);
+    }
+
+    @QueryMapping
+    List<Person> searchPersons(@Argument String name) {
+        return personService.searchByName(name);
+    }
+
+    @SchemaMapping(typeName = "Person")
+    List<Movie> directedMovies(Person person) {
+        return personService.findDirectedMovies(person);
+    }
+
+    @SchemaMapping(typeName = "Person")
+    List<MovieCast> movieCastCredits(Person person) {
+        return personService.findMovieCastCredits(person.getId());
+    }
+
+    @SchemaMapping(typeName = "Person")
+    List<TvShowCast> tvShowCastCredits(Person person) {
+        return personService.findTvShowCastCredits(person.getId());
     }
 
     @MutationMapping
