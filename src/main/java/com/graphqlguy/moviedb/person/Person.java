@@ -1,5 +1,6 @@
 package com.graphqlguy.moviedb.person;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -22,7 +23,11 @@ public class Person {
     private Long id;
     private String name;
     private Integer birthYear;
-    private String nationality;
+    @Column(length = 2)
+    private String countryCode;
+    @Column(length = 1000)
+    private String biography;
+    private String photoUrl;
 
     @Override
     public boolean equals(final Object o) {

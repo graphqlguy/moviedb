@@ -6,8 +6,10 @@ import com.graphqlguy.moviedb.movie.Movie;
 import com.graphqlguy.moviedb.movie.MovieCast;
 import com.graphqlguy.moviedb.movie.MovieCastRepository;
 import com.graphqlguy.moviedb.movie.MovieRepository;
+import com.graphqlguy.moviedb.tvshow.TvShow;
 import com.graphqlguy.moviedb.tvshow.TvShowCast;
 import com.graphqlguy.moviedb.tvshow.TvShowCastRepository;
+import com.graphqlguy.moviedb.tvshow.TvShowRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
@@ -35,11 +37,7 @@ public class PersonService {
     private final MovieCastRepository movieCastRepository;
     private final MovieRepository movieRepository;
     private final TvShowCastRepository tvShowCastRepository;
-
-    List<Person> getAllPeople() {
-        log.debug("Getting all people");
-        return personRepository.findAll();
-    }
+    private final TvShowRepository tvShowRepository;
 
     @Transactional
     @PreAuthorize("hasRole('ADMIN')")
@@ -48,7 +46,7 @@ public class PersonService {
         return personRepository.save(Person.builder()
                 .name(input.name())
                 .birthYear(input.birthYear())
-                .nationality(input.nationality())
+                .countryCode(input.countryCode())
                 .build());
     }
 
@@ -69,7 +67,7 @@ public class PersonService {
         final Person person = personOptional.get();
         applyIfPresent(input.name(), person::setName);
         applyIfPresent(input.birthYear(), person::setBirthYear);
-        applyIfPresent(input.nationality(), person::setNationality);
+        applyIfPresent(input.countryCode(), person::setCountryCode);
 
         return personRepository.save(person);
     }
@@ -127,6 +125,10 @@ public class PersonService {
 
     public List<Movie> findDirectedMovies(Person person) {
         return movieRepository.findByDirectorsContaining(person);
+    }
+
+    public List<TvShow> findCreatedShows(Person person) {
+        return tvShowRepository.findByCreatorsContaining(person);
     }
 
     public List<MovieCast> findMovieCastCredits(Long personId) {

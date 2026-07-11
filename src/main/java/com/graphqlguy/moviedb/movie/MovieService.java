@@ -8,11 +8,13 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.graphql.data.ArgumentValue;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.function.Consumer;
 
 @Slf4j
 @Service
@@ -62,6 +64,42 @@ public class MovieService {
             case RUNTIME -> "runtime";
         };
         return sort.order() == SortOrder.ASC ? Sort.by(field).ascending() : Sort.by(field).descending();
+    }
+
+    @Transactional
+    @PreAuthorize("hasRole('ADMIN')")
+    Movie createMovie(final CreateMovieInput input) {
+        log.info("Creating movie {}", input.title());
+        return movieRepository.save(Movie.builder()
+                .title(input.title()).releaseYear(input.releaseYear()).genre(input.genre())
+                .rating(input.rating()).runtime(input.runtime()).plot(input.plot())
+                .posterUrl(input.posterUrl()).tmdbId(input.tmdbId())
+                .build());
+    }
+
+    @Transactional
+    @PreAuthorize("hasRole('ADMIN')")
+    Movie updateMovie(final UpdateMovieInput input) {
+        log.info("Updating movie {}", input.id());
+        final Movie movie = movieRepository.findById(input.id())
+                .orElseThrow(() -> new EntityNotFoundException("Movie", input.id()));
+
+        applyIfPresent(input.title(), movie::setTitle);
+        applyIfPresent(input.releaseYear(), movie::setReleaseYear);
+        applyIfPresent(input.genre(), movie::setGenre);
+        applyIfPresent(input.rating(), movie::setRating);
+        applyIfPresent(input.runtime(), movie::setRuntime);
+        applyIfPresent(input.plot(), movie::setPlot);
+        applyIfPresent(input.posterUrl(), movie::setPosterUrl);
+        applyIfPresent(input.tmdbId(), movie::setTmdbId);
+
+        return movieRepository.save(movie);
+    }
+
+    private <T> void applyIfPresent(final ArgumentValue<T> arg, final Consumer<T> setter) {
+        if (arg.isPresent()) {
+            setter.accept(arg.value());
+        }
     }
 
     @Transactional

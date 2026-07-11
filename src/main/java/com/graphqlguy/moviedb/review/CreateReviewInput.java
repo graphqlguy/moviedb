@@ -5,8 +5,8 @@ import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 
-public record CreateMovieReviewInput(
-        @NotNull String movieId,
+public record CreateReviewInput(
+        @NotNull ReviewSubjectInput subject,
         @Min(1) @Max(10) int score,
         @Size(max = 2000) String comment
 ) {}

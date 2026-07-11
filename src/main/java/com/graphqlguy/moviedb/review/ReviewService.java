@@ -4,6 +4,8 @@ import com.graphqlguy.moviedb.exception.DuplicateReviewException;
 import com.graphqlguy.moviedb.exception.EntityNotFoundException;
 import com.graphqlguy.moviedb.movie.Movie;
 import com.graphqlguy.moviedb.movie.MovieRepository;
+import com.graphqlguy.moviedb.tvshow.TvShow;
+import com.graphqlguy.moviedb.tvshow.TvShowRepository;
 import com.graphqlguy.moviedb.user.AppUser;
 import com.graphqlguy.moviedb.user.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -19,27 +21,43 @@ public class ReviewService {
 
     private final ReviewRepository reviewRepository;
     private final MovieRepository movieRepository;
+    private final TvShowRepository tvShowRepository;
     private final UserRepository userRepository;
+    private final ReviewPublisher reviewPublisher;
 
     @Transactional
     @PreAuthorize("isAuthenticated()")
-    public Review createMovieReview(CreateMovieReviewInput input, String username) {
+    public Review createReview(CreateReviewInput input, String username) {
         AppUser user = userRepository.findByUsername(username)
                 .orElseThrow(() -> new IllegalStateException("Authenticated user has no matching record: " + username));
-        Long movieId = Long.parseLong(input.movieId());
-        Movie movie = movieRepository.findById(movieId)
-                .orElseThrow(() -> new EntityNotFoundException("Movie", movieId));
 
-        if (reviewRepository.existsByMovieIdAndUserId(movieId, user.getId())) {
-            throw new DuplicateReviewException();
-        }
-
-        return reviewRepository.save(Review.builder()
-                .movie(movie)
+        Review.ReviewBuilder review = Review.builder()
                 .user(user)
                 .score(input.score())
-                .comment(input.comment())
-                .build());
+                .comment(input.comment());
+
+        // The @oneOf directive guarantees exactly one of movieId/tvShowId is set
+        if (input.subject().movieId() != null) {
+            Long movieId = Long.parseLong(input.subject().movieId());
+            Movie movie = movieRepository.findById(movieId)
+                    .orElseThrow(() -> new EntityNotFoundException("Movie", movieId));
+            if (reviewRepository.existsByMovieIdAndUserId(movieId, user.getId())) {
+                throw new DuplicateReviewException();
+            }
+            review.movie(movie);
+        } else {
+            Long tvShowId = Long.parseLong(input.subject().tvShowId());
+            TvShow tvShow = tvShowRepository.findById(tvShowId)
+                    .orElseThrow(() -> new EntityNotFoundException("TvShow", tvShowId));
+            if (reviewRepository.existsByTvShowIdAndUserId(tvShowId, user.getId())) {
+                throw new DuplicateReviewException();
+            }
+            review.tvShow(tvShow);
+        }
+
+        Review saved = reviewRepository.save(review.build());
+        reviewPublisher.publish(ReviewNotification.of(saved));
+        return saved;
     }
 
     @Transactional

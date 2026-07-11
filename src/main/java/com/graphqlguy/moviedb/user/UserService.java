@@ -25,4 +25,24 @@ public class UserService {
         String token = jwtUtil.generateToken(user.getUsername(), user.getRole().name());
         return new AuthResponse(token, user);
     }
+
+    @Transactional
+    public AuthResponse register(RegisterInput input) {
+        if (userRepository.existsByUsername(input.username())) {
+            throw new InvalidInputException("username", "Username is already taken");
+        }
+        if (userRepository.existsByEmail(input.email())) {
+            throw new InvalidInputException("email", "Email is already registered");
+        }
+
+        AppUser user = userRepository.save(AppUser.builder()
+                .username(input.username())
+                .email(input.email())
+                .password(passwordEncoder.encode(input.password()))
+                .role(Role.USER)
+                .build());
+
+        String token = jwtUtil.generateToken(user.getUsername(), user.getRole().name());
+        return new AuthResponse(token, user);
+    }
 }
